@@ -34,5 +34,41 @@ namespace TelescopeControl.Properties {
                 this["Telescope"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Please choose")]
+        public string data {
+            get {
+                return ((string)(this["data"]));
+            }
+            set {
+                this["data"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string offset {
+            get {
+                return ((string)(this["offset"]));
+            }
+            set {
+                this["offset"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string minsOffset {
+            get {
+                return ((string)(this["minsOffset"]));
+            }
+            set {
+                this["minsOffset"] = value;
+            }
+        }
     }
 }

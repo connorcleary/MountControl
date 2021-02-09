@@ -5,5 +5,14 @@
     <Setting Name="Telescope" Type="System.String" Scope="User">
       <Value Profile="(Default)">Please choose</Value>
     </Setting>
+    <Setting Name="data" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Please choose</Value>
+    </Setting>
+    <Setting Name="offset" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="minsOffset" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
