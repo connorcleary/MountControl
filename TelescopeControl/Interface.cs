@@ -130,10 +130,10 @@ namespace TelescopeControl
         }
 
         private void btnStart_Click(object sender, EventArgs e)
-        {
-            btnStart.Enabled = false;       
+        {       
              // to add safety, requires telescope to be parked
             trackSatellites();
+            btnStart.Enabled = false;
         }
 
         private void trackSatellites()
@@ -165,9 +165,16 @@ namespace TelescopeControl
                         {
                             offsetRa = 24 - (offsetHours + 1.0 / 60.0 * offsetMins - nextRa);
                         }
-                        objTelescope.SlewToCoordinates(offsetRa, nextDec);
-                        RunTimer.Start();                                           
-                        imagesCaptured = 1; // note this line is only run after the RunTimer is stopped
+                        try
+                        {
+                            objTelescope.SlewToCoordinates(offsetRa, nextDec);
+                            RunTimer.Start();
+                            imagesCaptured = 1;
+                        }
+                        catch
+                        {
+                        }
+ // note this line is only run after the RunTimer is stopped
                     }
                     catch 
                     {
@@ -188,9 +195,17 @@ namespace TelescopeControl
                     {
                         offsetRa = 24 - (offsetHours + 1.0 / 60.0 * offsetMins - nextRa);
                     }
-                    objTelescope.SlewToCoordinates(offsetRa, nextDec);
-                    RunTimer.Start();
-                    imagesCaptured = 0;
+                    try
+                    {
+                        objTelescope.SlewToCoordinates(offsetRa, nextDec);
+                        RunTimer.Start();
+                        imagesCaptured = 0;
+                    }
+                    catch
+                    {
+                    }
+
+
                 }
             }
         }
@@ -218,7 +233,7 @@ namespace TelescopeControl
 
                 nextRa = double.Parse(ra[0].Trim('h')) + 1.0 / 60.0 * double.Parse(ra[1].Trim('m')) + 1.0 / 3600.0 * double.Parse(ra[2].Trim('s'));
                 nextDec = double.Parse(dec[0].Trim(charsToTrim)) + 1.0 / 60.0 * decSign * double.Parse(dec[1].Trim('\'')) + 1.0 / 3600.0 * decSign * double.Parse(dec[2].Trim('\"'));
-                nextAos = new DateTime(year, month, day, short.Parse(time[0]), short.Parse(time[1]), short.Parse(time[2])).Add(new TimeSpan(24 * nextDay, -1, 0)); // offset before the 
+                nextAos = new DateTime(year, month, day, short.Parse(time[0]), short.Parse(time[1]), short.Parse(time[2])).Add(new TimeSpan(24 * nextDay, 0, 0)); // offset before the 
                 double secondsToAos = (nextAos - DateTime.Now.Add(new TimeSpan(offsetHours, offsetMins, 0))).TotalSeconds; //nged to an acceptable, latest possible AOS
 
                 if ((secondsToAos - Math.Max(Math.Abs(nextRa - currentRa), Math.Abs(nextRa - currentDec)) / slewSpeed) > 0.0) // will need to be split up if the motor speeds are different
@@ -251,7 +266,7 @@ namespace TelescopeControl
 
             nextRa = double.Parse(ra[0].Trim('h')) + 1.0 / 60.0 * double.Parse(ra[1].Trim('m')) + 1.0 / 3600.0 * double.Parse(ra[2].Trim('s'));
             nextDec = double.Parse(dec[0].Trim(charsToTrim)) + 1.0 / 60.0 * decSign * double.Parse(dec[1].Trim('\'')) + 1.0 / 3600.0 * decSign * double.Parse(dec[2].Trim('\"'));
-            nextAos = new DateTime(year, month, day, Int16.Parse(time[0]), Int16.Parse(time[1]), Int16.Parse(time[2])).Add(new TimeSpan(24*nextDay, -1 ,0)); // offset before the 
+            nextAos = new DateTime(year, month, day, Int16.Parse(time[0]), Int16.Parse(time[1]), Int16.Parse(time[2])).Add(new TimeSpan(24*nextDay, 0 ,0)); // offset before the 
 
             lbTargetAos.Text = nextAos.ToString();
         }
@@ -306,11 +321,24 @@ namespace TelescopeControl
             }
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnResetNight_Click(object sender, EventArgs e)
+        {
+            idx = 0;
+            imagesCaptured = 0;
+            offsetHours = 0;
+            offsetMins = 0;
+            btnStart.Enabled = true;
+        }
 
         private void ImageTimer_Tick(object sender, EventArgs e)
         { 
             // this timer keeps the mount in position while an image is being taken
-            if (sdx < 10)
+            if (sdx < 25)
             {
                 sdx++;
                 lbTargetLocked.Text = "Capturing image";
