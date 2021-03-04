@@ -87,9 +87,9 @@
             this.lbTime.AutoSize = true;
             this.lbTime.Location = new System.Drawing.Point(381, 205);
             this.lbTime.Name = "lbTime";
-            this.lbTime.Size = new System.Drawing.Size(63, 13);
+            this.lbTime.Size = new System.Drawing.Size(66, 13);
             this.lbTime.TabIndex = 6;
-            this.lbTime.Text = "Current time";
+            this.lbTime.Text = "Current time:";
             this.lbTime.UseWaitCursor = true;
             // 
             // btnStart
@@ -179,7 +179,7 @@
             // lbWarningText
             // 
             this.lbWarningText.AutoSize = true;
-            this.lbWarningText.Location = new System.Drawing.Point(65, 265);
+            this.lbWarningText.Location = new System.Drawing.Point(65, 205);
             this.lbWarningText.Name = "lbWarningText";
             this.lbWarningText.Size = new System.Drawing.Size(0, 13);
             this.lbWarningText.TabIndex = 17;
@@ -209,23 +209,22 @@
             // 
             // btnSetExposure
             // 
-            this.btnSetExposure.Location = new System.Drawing.Point(127, 70);
+            this.btnSetExposure.Location = new System.Drawing.Point(12, 73);
             this.btnSetExposure.Name = "btnSetExposure";
             this.btnSetExposure.Size = new System.Drawing.Size(109, 24);
             this.btnSetExposure.TabIndex = 19;
             this.btnSetExposure.Text = "Choose exposure";
             this.btnSetExposure.UseVisualStyleBackColor = true;
             this.btnSetExposure.UseWaitCursor = true;
+            this.btnSetExposure.Click += new System.EventHandler(this.btnSetExposure_Click);
             // 
             // tbExposure
             // 
-            this.tbExposure.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::TelescopeControl.Properties.Settings.Default, "Telescope", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tbExposure.Location = new System.Drawing.Point(12, 73);
+            this.tbExposure.Location = new System.Drawing.Point(127, 73);
             this.tbExposure.Name = "tbExposure";
-            this.tbExposure.ReadOnly = true;
             this.tbExposure.Size = new System.Drawing.Size(109, 20);
             this.tbExposure.TabIndex = 20;
-            this.tbExposure.Text = global::TelescopeControl.Properties.Settings.Default.Telescope;
+            this.tbExposure.Text = "10";
             this.tbExposure.UseWaitCursor = true;
             // 
             // btnSetOffset

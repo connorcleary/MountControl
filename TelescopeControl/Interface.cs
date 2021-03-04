@@ -43,6 +43,7 @@ namespace TelescopeControl
         double nextDec;
         double nextRa;
         int sdx;
+        int exposureTime = 10;
 
         #endregion
 
@@ -272,78 +273,34 @@ namespace TelescopeControl
         }
 
 
-
-        private void btnOffset_Click(object sender, EventArgs e)
-        {
-            // this allows offset to be set while the simulation is running
-            try
-            {
-                if (short.Parse(txtEnterOffset.Text) + 1.0/60.0* short.Parse(textMinsOffset.Text) >= offsetHours + 1.0 / 60.0 * offsetMins)
-                {
-                    offsetHours = short.Parse(txtEnterOffset.Text);
-                    offsetMins = short.Parse(textMinsOffset.Text);
-              
-                }
-            }
-            catch (Exception)
-            {
-                lbWarningText.Text = "Offset can only be increased";
-            }
-        }
-
         private void btnCheckTelesscope_Click(object sender, EventArgs e)
         {
             // perform checks of telescope and connection
             var canTrack = objTelescope.CanSetTracking;
             var canSlew = objTelescope.CanSlew;
+            var atPark = objTelescope.AtHome;
 
-            if (canTrack && canSlew)
+            if (canTrack && canSlew && atPark)
             {
                 btnStart.Enabled = true;
                 lbWarningText.Text = "Ready to start tracking";
             }
             else
             {
-                lbWarningText.Text = "Please ensure telescope is parked and polar aligned";
+                lbWarningText.Text = "Please ensure telescope is at the zero position";
             }
         }
 
-        private void manualSlew_Click(object sender, EventArgs e)
+
+        private void btnSetExposure_Click(object sender, EventArgs e)
         {
-            try
-            {
-                float ra = float.Parse(textRA.Text);
-                float dec = float.Parse(textDec.Text);
-                objTelescope.SlewToCoordinates(ra, dec);
-            }
-            catch
-            {
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnResetNight_Click(object sender, EventArgs e)
-        {
-            idx = 0;
-            imagesCaptured = 0;
-            offsetHours = 0;
-            offsetMins = 0;
-            btnStart.Enabled = true;
-        }
-
-        private void txtCamera_TextChanged(object sender, EventArgs e)
-        {
-
+            exposureTime = int.Parse(tbExposure.Text);
         }
 
         private void ImageTimer_Tick(object sender, EventArgs e)
         { 
             // this timer keeps the mount in position while an image is being taken
-            if (sdx < 25)
+            if (sdx < exposureTime)
             {
                 sdx++;
                 lbTargetLocked.Text = "Capturing image";
