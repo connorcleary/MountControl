@@ -11,3 +11,5 @@ To run:
 5. Run `TelescopeControl.exe`
 6. Select mount, schedule and exposure time. Ensure the zero position of the mount has been set
 7. Start
+
+To edit the code, you will have to also download the [ASCOM Developer Components](https://www.ascom-standards.org/Developer/Index.htm)
