@@ -335,6 +335,11 @@ namespace TelescopeControl
             btnStart.Enabled = true;
         }
 
+        private void txtCamera_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void ImageTimer_Tick(object sender, EventArgs e)
         { 
             // this timer keeps the mount in position while an image is being taken
