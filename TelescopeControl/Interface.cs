@@ -35,13 +35,12 @@ namespace TelescopeControl
         double currentRa;
         double currentDec;
         DateTime nextAos;
-        bool endOfNight = false;
         int imagesCaptured = 0;
         int idx = 0;
-        int offsetHours;
-        int offsetMins;
         double nextDec;
         double nextRa;
+        int offsetHours = 0;
+        int offsetMins = 0;
         int sdx;
         int exposureTime = 10;
 
@@ -58,25 +57,25 @@ namespace TelescopeControl
 
         public void btnSelectTelescope_Click(object sender, EventArgs e)
         {
-            // opens the ASCOM chooser menu to find telescope
+            /// This button opens the ASCOM Chooser and allows you to choose a telescope (mount)
+
             string teleID;
             var objChooser = new ASCOM.Utilities.Chooser();
             objChooser.DeviceType = "Telescope";
             teleID = objChooser.Choose();
-            Properties.Settings.Default.Telescope = teleID;
-            
+            Properties.Settings.Default.Telescope = teleID;           
         }
 
         public void btnConnect_Click(object sender, EventArgs e)
         {
-            // connects to telescope
+            /// Button to connect to the telescope
             try 
             {
                 objTelescope = new ASCOM.DriverAccess.Telescope(Properties.Settings.Default.Telescope);
                 objTelescope.Connected = true;
                 btnConnect.Enabled = false;
                 btnCheckTelesscope.Enabled = true;               
-            } // if no telescope has been chosen
+            } 
             catch (Exception)
             {
                 lbWarning.Text = "Warning:  Please select Telescope";
@@ -86,7 +85,7 @@ namespace TelescopeControl
 
         private void btnSelectData_Click(object sender, EventArgs e)
         {
-            // opens the windows browse files interface to choose file
+            /// This button opens an file explorer window
             var FD = new System.Windows.Forms.OpenFileDialog();
             if (FD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -98,9 +97,8 @@ namespace TelescopeControl
 
         private void btnImportData_Click(object sender, EventArgs e)
         {
-            // import data
+            /// Import data      
 
-            // with file open
             using (var reader = new StreamReader(@Properties.Settings.Default.data))
             {
                 var line = reader.ReadLine();
@@ -131,8 +129,7 @@ namespace TelescopeControl
         }
 
         private void btnStart_Click(object sender, EventArgs e)
-        {       
-             // to add safety, requires telescope to be parked
+        {      
             trackSatellites();
             btnStart.Enabled = false;
         }
@@ -175,7 +172,6 @@ namespace TelescopeControl
                         catch
                         {
                         }
- // note this line is only run after the RunTimer is stopped
                     }
                     catch 
                     {
@@ -234,14 +230,13 @@ namespace TelescopeControl
 
                 nextRa = double.Parse(ra[0].Trim('h')) + 1.0 / 60.0 * double.Parse(ra[1].Trim('m')) + 1.0 / 3600.0 * double.Parse(ra[2].Trim('s'));
                 nextDec = double.Parse(dec[0].Trim(charsToTrim)) + 1.0 / 60.0 * decSign * double.Parse(dec[1].Trim('\'')) + 1.0 / 3600.0 * decSign * double.Parse(dec[2].Trim('\"'));
-                nextAos = new DateTime(year, month, day, short.Parse(time[0]), short.Parse(time[1]), short.Parse(time[2])).Add(new TimeSpan(24 * nextDay, 0, 0)); // offset before the 
-                double secondsToAos = (nextAos - DateTime.Now.Add(new TimeSpan(offsetHours, offsetMins, 0))).TotalSeconds; //nged to an acceptable, latest possible AOS
+                nextAos = new DateTime(year, month, day, short.Parse(time[0]), short.Parse(time[1]), short.Parse(time[2])).Add(new TimeSpan(24 * nextDay, 0, 0));
+                double secondsToAos = (nextAos - DateTime.Now.Add(new TimeSpan(offsetHours, offsetMins, 0))).TotalSeconds; 
 
-                if ((secondsToAos - Math.Max(Math.Abs(nextRa - currentRa), Math.Abs(nextRa - currentDec)) / slewSpeed) > 0.0) // will need to be split up if the motor speeds are different
+                if ((secondsToAos - Math.Max(Math.Abs(nextRa - currentRa), Math.Abs(nextRa - currentDec)) / slewSpeed) > 0.0) // here is where you can allow for motor speeds
                 {
                     lbTargetName.Text = targetNames[idx];
-                    lbTargetAos.Text = nextAos.ToString();
-                    // need to offset to optimal point        
+                    lbTargetAos.Text = nextAos.ToString();      
                     targetAquired = true;
                 }
                 else
@@ -253,7 +248,6 @@ namespace TelescopeControl
 
         private void goToNextImage()
         {
-            // this function assumes that the mount is able to move faster than the speed of the satellite
             var ra = endRa[idx].Split(' ');
             var dec = endDec[idx].Split(' ');
             var time = los[idx].Split(':');
